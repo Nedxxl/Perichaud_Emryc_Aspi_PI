@@ -92,7 +92,7 @@ void TTask1::task(void)
 
 		if (poidChange)
 		{
-			double poid = partage->getPoidBalance();
+			poid = partage->getPoidBalance();
 			sprintf(sendPoid, "<P%07.1f>", poid);
 			screen->dispStr(1, 6, sendPoid);
 		}
