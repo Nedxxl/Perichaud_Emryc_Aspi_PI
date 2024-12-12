@@ -66,16 +66,12 @@ void TTask1::task(void)
 		{
 			if (partage->getAspi())
 			{
-				com1->sendTx(sendMarche, sizeof(sendMarche));
+				com1->sendTx(sendMarche, strlen(sendMarche));
 			}
 			else
 			{
-				com1->sendTx(sendArret, sizeof(sendArret));
+				com1->sendTx(sendArret, strlen(sendArret));
 			}
-		}
-		else
-		{
-			com1->sendTx(sendPoid, sizeof(sendPoid));
 		}
 
 		if (echoAspiChange == true)
@@ -94,6 +90,7 @@ void TTask1::task(void)
 		{
 			poid = partage->getPoidBalance();
 			sprintf(sendPoid, "<P%07.1f>", poid);
+			com1->sendTx(sendPoid, sizeof(sendPoid));
 			screen->dispStr(1, 6, sendPoid);
 		}
 
