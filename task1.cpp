@@ -34,9 +34,9 @@ void TTask1::task(void)
 	bool nivBChange = false;
 	bool nivCChange = false;
 	bool echoAspiChange = false;
-	char sendMarche[3] = {'<', 'M', '>'};
-	char sendArret[3] = {'<', 'A', '>'};
-	char sendPoid[10];
+	char sendMarche[4] = {'<', 'M', '>', '\0'};
+	char sendArret[4] = {'<', 'A', '>', '\0'};
+	char sendPoid[11];
 	double poid;
 
 	// synchronisation démarrage tâche
@@ -90,7 +90,7 @@ void TTask1::task(void)
 		{
 			poid = partage->getPoidBalance();
 			sprintf(sendPoid, "<P%07.1f>", poid);
-			com1->sendTx(sendPoid, sizeof(sendPoid));
+			com1->sendTx(sendPoid, strlen(sendPoid));
 			screen->dispStr(1, 6, sendPoid);
 		}
 
@@ -112,6 +112,6 @@ void TTask1::task(void)
 		if (mqtt->loop(0) != 0)
 			mqtt->reconnect();
 
-		usleep(250000); // 250 ms
+		sleep(2); // 1s
 	}
 }
