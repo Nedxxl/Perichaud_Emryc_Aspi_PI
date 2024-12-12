@@ -60,6 +60,7 @@ void TCom1::rxCar(unsigned char car)
 			if (partage->getEchoAspi() == true)
 			{
 				partage->setEchoAspi(false);
+				partage->setAspi(false);
 				screen->dispStr(1, 5, "Aspi : OFF");
 			}
 			state = WAIT_END;
@@ -69,6 +70,7 @@ void TCom1::rxCar(unsigned char car)
 			if (partage->getEchoAspi() == true)
 			{
 				partage->setEchoAspi(false);
+				partage->setAspi(false);
 				screen->dispStr(1, 5, "Aspi : OFF");
 			}
 			state = WAIT_END;

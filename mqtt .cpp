@@ -30,7 +30,9 @@ void TMqtt::on_connect(int rc)
 	{
 		screen->dispStr(1, 13, "Connected : OK  ");
 
-		subscribe(NULL, "RAM/#", 0);
+		subscribe(NULL, "RAM/shopvac/cmd/force", 0);
+		subscribe(NULL, "RAM/balance/etats/poids", 0);
+		subscribe(NULL, "RAM/melangeur/etats/recetteStatut", 0);
 	}
 	else
 		screen->dispStr(1, 13, "Connected : Fail");

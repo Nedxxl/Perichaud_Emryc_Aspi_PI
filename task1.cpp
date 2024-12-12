@@ -11,11 +11,6 @@ TTask1::TTask1(const char *name, void *shared, int32_t policy, int32_t priority,
 	nameMqtt = TMqtt::getMqttConfig();
 	mqtt = new TMqtt(screen, "MqttAspi", nameMqtt.c_str());
 
-	com1 = new TCom1(TCom1::getComConfig("com.def").c_str(), screen, 10, TCom::b9600, TCom::pNONE, TCom::dS8, 10000);
-	com1->start();
-
-	screen->dispStr(1, 10, "Task MQTT (CPU :  ) :");
-	screen->dispStr(30, 10, nameMqtt.c_str());
 }
 
 TTask1::~TTask1()
@@ -28,16 +23,10 @@ void TTask1::task(void)
 {
 	// variable locale
 	char strCar[2] = {'-', '\0'};
-	bool aspiChange = false;
-	bool poidChange = false;
 	bool nivAChange = false;
 	bool nivBChange = false;
 	bool nivCChange = false;
 	bool echoAspiChange = false;
-	char sendMarche[4] = {'<', 'M', '>', '\0'};
-	char sendArret[4] = {'<', 'A', '>', '\0'};
-	char sendPoid[11];
-	double poid;
 
 	// synchronisation démarrage tâche
 	signalStart();
@@ -51,28 +40,15 @@ void TTask1::task(void)
 			strCar[0] = '-';
 		else
 			strCar[0] = '|';
-		screen->dispStr(23, 11, strCar);
+		screen->dispStr(23, 12, strCar);
 
 		// lecture des changements
-		aspiChange = partage->AspiChange();
-		poidChange = partage->poidChange();
 		nivAChange = partage->nivChange('A');
 		nivBChange = partage->nivChange('B');
 		nivCChange = partage->nivChange('C');
 		echoAspiChange = partage->echoChange();
 
 		// envoi des données
-		if (aspiChange)
-		{
-			if (partage->getAspi())
-			{
-				com1->sendTx(sendMarche, strlen(sendMarche));
-			}
-			else
-			{
-				com1->sendTx(sendArret, strlen(sendArret));
-			}
-		}
 
 		if (echoAspiChange == true)
 		{
@@ -84,14 +60,6 @@ void TTask1::task(void)
 			{
 				mqtt->publish(NULL, "RAM/shopvac/etats/sequence", 8, "FINISHED", 0, false);
 			}
-		}
-
-		if (poidChange)
-		{
-			poid = partage->getPoidBalance();
-			sprintf(sendPoid, "<P%07.1f>", poid);
-			com1->sendTx(sendPoid, strlen(sendPoid));
-			screen->dispStr(1, 6, sendPoid);
 		}
 
 		if (nivAChange)
@@ -112,6 +80,6 @@ void TTask1::task(void)
 		if (mqtt->loop(0) != 0)
 			mqtt->reconnect();
 
-		sleep(2); // 1s
+		usleep(250000); // 250ms
 	}
 }
